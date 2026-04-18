@@ -3,6 +3,7 @@ package main
 import (
 	"cortex/internal/controller"
 	l "cortex/internal/logger"
+	service "cortex/internal/service/analyser"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -23,8 +24,12 @@ func main() {
 
 	//server
 	w := gin.Default()
-	w.GET("/ping", controller.Pong)
-	w.POST("/analyze", controller.AnalyzeRepoHandler)
+	//services and controllers instances
+	svc := service.NewAnalyserService()
+	h := controller.NewAnalyserController(svc)
+
+	w.GET("/ping", h.Pong)
+	w.POST("/analyze", h.AnalyzeRepoHandler)
 
 	l.Log.Info("listening at 6969")
 	if err := w.Run(":6969"); err != nil {
