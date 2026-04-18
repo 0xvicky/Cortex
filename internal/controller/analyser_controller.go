@@ -29,8 +29,8 @@ func (h *AnalyserController) Pong(c *gin.Context) {
 	})
 }
 
-func (h *AnalyserController) AnalyzeRepoHandler(c *gin.Context) {
-	var req model.AnalyseRepoRequest
+func (h *AnalyserController) AnalyzeHandler(c *gin.Context) {
+	var req model.AnalyseRequest
 	if err := c.ShouldBindBodyWithJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
@@ -38,7 +38,8 @@ func (h *AnalyserController) AnalyzeRepoHandler(c *gin.Context) {
 		})
 	}
 
-	if analyRepoErr := h.Service.AnalyseRepo(c, req); analyRepoErr != nil {
+	fileCount, analyRepoErr := h.Service.Analyse(c, req)
+	if analyRepoErr != nil {
 		l.Log.Error("repo analyser error",
 			zap.Error(analyRepoErr),
 		)
@@ -50,6 +51,10 @@ func (h *AnalyserController) AnalyzeRepoHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
+		"message": "Repo Analysis success",
+		"result": gin.H{
+			"file_count": fileCount,
+		},
 	})
 
 }

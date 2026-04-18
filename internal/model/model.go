@@ -1,5 +1,5 @@
 package model
 
-type AnalyseRepoRequest struct {
+type AnalyseRequest struct {
 	RepoLink string `json:"repoUrl" binding:"required"`
 }

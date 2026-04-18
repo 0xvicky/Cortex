@@ -29,7 +29,7 @@ func main() {
 	h := controller.NewAnalyserController(svc)
 
 	w.GET("/ping", h.Pong)
-	w.POST("/analyze", h.AnalyzeRepoHandler)
+	w.POST("/analyze", h.AnalyzeHandler)
 
 	l.Log.Info("listening at 6969")
 	if err := w.Run(":6969"); err != nil {
@@ -40,7 +40,3 @@ func main() {
 	}
 
 }
-
-//setup for a basic webserver using gin✅
-//add air✅
-//basic unit testing framework
