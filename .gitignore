@@ -9,6 +9,7 @@
 # 📦 Go build
 bin/
 pkg/
+tmp/
 
 # 🔥 Air
 build-errors.log
