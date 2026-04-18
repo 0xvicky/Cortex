@@ -5,7 +5,6 @@ import (
 	"cortex/internal/model"
 	"net/http"
 	"os"
-	"os/exec"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -50,18 +49,9 @@ func AnalyzeRepoHandler(c *gin.Context) {
 			zap.Error(pathErr),
 		)
 	}
-	//2. Cloning the project in path
-	cmd := exec.Command("git", "clone", req.RepoLink, path)
-	if cmdErr := cmd.Run(); cmdErr != nil {
-		l.Log.Error("error while cloning repo",
-			zap.Error(cmdErr),
-		)
-
-	}
-
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"message": "clone success",
+		"message": "Pong",
 		"path":    path,
 	})
 
