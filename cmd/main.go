@@ -12,6 +12,9 @@ func main() {
 
 	//init logger
 	l.InitLogger()
+	if l.Log == nil {
+		panic("logger not initialized")
+	}
 	defer l.Log.Sync()
 	// fmt.Println("Cortex:AI codebase intelligence engine")
 	l.Log.Info("Server Code Runnig",
@@ -21,6 +24,7 @@ func main() {
 	//server
 	w := gin.Default()
 	w.GET("/ping", controller.Pong)
+	w.POST("/analyze", controller.AnalyzeRepoHandler)
 
 	l.Log.Info("listening at 6969")
 	if err := w.Run(":6969"); err != nil {

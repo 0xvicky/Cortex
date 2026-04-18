@@ -4,10 +4,10 @@ import "go.uber.org/zap"
 
 var Log *zap.Logger
 
-func InitLogger() *zap.Logger {
-	Log, logErr := zap.NewProduction()
+func InitLogger() {
+	var logErr error
+	Log, logErr = zap.NewDevelopment()
 	if logErr != nil {
 		panic(logErr) // fail fast, don’t silently continue
 	}
-	return Log
 }
