@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"path/filepath"
 
+	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
@@ -34,4 +35,30 @@ func DirScanner(repoPath string, queue chan<- model.ChannelData) (int, error) {
 		return nil
 	})
 	return nFiles, nil
+}
+
+func AIDummy(payload model.AIChunkPayload) model.AggregationResponse {
+	var response = model.AggregationResponse{
+		FileNo:   payload.FileNo,
+		FilePath: payload.FilePath,
+		ChunkId:  payload.ChunkId,
+		AIResponse: gin.H{
+			"insights": []string{
+				"Good separation of concerns",
+				"Follows RESTful design",
+			},
+
+			"risks": []string{
+				"No input validation in some handlers",
+				"Lack of error handling in DB layer",
+			},
+
+			"recommendations": []string{
+				"Add middleware for validation",
+				"Improve error handling",
+			},
+		},
+	}
+
+	return response
 }
