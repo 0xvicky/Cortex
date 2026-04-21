@@ -1,8 +1,10 @@
 package processor
 
 import (
+	"cortex/internal/constants"
 	l "cortex/internal/logger"
 	"cortex/internal/model"
+	"cortex/internal/utils"
 	"io/fs"
 	"path/filepath"
 
@@ -14,11 +16,19 @@ func DirScanner(repoPath string, queue chan<- model.ChannelData) (int, error) {
 		zap.String("string", repoPath),
 	)
 	var nFiles int = 0
-	filepath.WalkDir(repoPath, func(path string, d fs.DirEntry, err error) error {
+	walkErr := filepath.WalkDir(repoPath, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
-		if !d.IsDir() {
+		// skip directories early
+		if d.IsDir() {
+			if constants.SkipDirs[d.Name()] {
+				return filepath.SkipDir
+			}
+			return nil // don't process dirs, just walk into them
+		}
+
+		if utils.ShouldProcess(path, d) {
 			nFiles++
 			fileData := model.ChannelData{
 				FilePath: path,
@@ -29,5 +39,9 @@ func DirScanner(repoPath string, queue chan<- model.ChannelData) (int, error) {
 
 		return nil
 	})
+
+	if walkErr != nil {
+		return 0, walkErr
+	}
 	return nFiles, nil
 }
