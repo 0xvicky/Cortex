@@ -10,15 +10,20 @@ type ChannelData struct {
 }
 
 type AIChunkPayload struct {
-	FileNo   int
-	FilePath string
-	ChunkId  int
-	Payload  []byte
+	FileNo      int
+	FilePath    string
+	FileName    string
+	ChunkId     int
+	TotalChunks int
+	Payload     []byte
 }
 
 type AggregationResponse struct {
-	FileNo     int
-	FilePath   string
-	ChunkId    int
-	AIResponse any // will change later
+	FileNo      int
+	FilePath    string
+	FileName    string
+	ChunkId     int
+	TotalChunks int
+	AIResponse  any // will change later
+
 }

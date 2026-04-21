@@ -8,8 +8,8 @@ import (
 	"go.uber.org/zap"
 )
 
-func WorkersInit(nWorkers int, wg *sync.WaitGroup, queue <-chan model.ChannelData) {
-	var aggrQueue = make(chan model.AggregationResponse)
+func WorkersInit(nWorkers int, wg *sync.WaitGroup, queue <-chan model.ChannelData, aggrQueue chan<- model.AggregationResponse) {
+
 	for i := 1; i <= nWorkers; i++ {
 		wg.Add(1)
 		go func(workerId int) {

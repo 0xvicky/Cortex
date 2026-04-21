@@ -5,6 +5,7 @@ import (
 	"cortex/internal/utils"
 	"errors"
 	"io"
+	"math"
 	"os"
 )
 
@@ -13,9 +14,12 @@ func ProcessChunk(d model.ChannelData, aggrQueue chan<- model.AggregationRespons
 	file, _ := os.Open(d.FilePath)
 	stat, _ := file.Stat()
 	fileSize := stat.Size()
+	fileName := stat.Name()
 	var chunkSize = 2000
+	var overlap = 200
 	var buffer = make([]byte, chunkSize)
-	var chunkCount = 1
+	var chunkCount = 0
+	var totalChunks = int(math.Ceil(float64(fileSize) / float64(chunkSize-overlap)))
 	//create a fix amount of chunk of characters or words
 	for {
 		n, err := file.Read(buffer)
@@ -26,10 +30,12 @@ func ProcessChunk(d model.ChannelData, aggrQueue chan<- model.AggregationRespons
 			continue
 		}
 		var payload = model.AIChunkPayload{
-			FileNo:   d.FileNo,
-			FilePath: d.FilePath,
-			ChunkId:  chunkCount,
-			Payload:  buffer[:n],
+			FileNo:      d.FileNo,
+			FilePath:    d.FilePath,
+			FileName:    fileName,
+			ChunkId:     chunkCount,
+			TotalChunks: totalChunks,
+			Payload:     buffer[:n],
 		}
 		if n > 0 {
 			//send to ai layer(dummy rn) and push the response to aggregation channel
@@ -40,7 +46,7 @@ func ProcessChunk(d model.ChannelData, aggrQueue chan<- model.AggregationRespons
 		//overlapping logic
 		fileOffset, _ := file.Seek(0, io.SeekCurrent)
 		if fileOffset < fileSize {
-			_, seekErr := file.Seek(-200, io.SeekCurrent)
+			_, seekErr := file.Seek(-int64(overlap), io.SeekCurrent)
 			if seekErr != nil {
 				return seekErr
 			}

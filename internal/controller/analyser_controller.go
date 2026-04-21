@@ -38,7 +38,7 @@ func (h *AnalyserController) AnalyzeHandler(c *gin.Context) {
 		})
 	}
 
-	fileCount, analyRepoErr := h.Service.Analyse(c, req)
+	aiResponse, analyRepoErr := h.Service.Analyse(c, req)
 	if analyRepoErr != nil {
 		l.Log.Error("repo analyser error",
 			zap.Error(analyRepoErr),
@@ -53,7 +53,7 @@ func (h *AnalyserController) AnalyzeHandler(c *gin.Context) {
 		"success": true,
 		"message": "Repo Analysis success",
 		"result": gin.H{
-			"file_count": fileCount,
+			"summary": aiResponse,
 		},
 	})
 

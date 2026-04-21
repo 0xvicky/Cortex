@@ -8,9 +8,11 @@ import (
 
 func AIDummy(payload model.AIChunkPayload) model.AggregationResponse {
 	var response = model.AggregationResponse{
-		FileNo:   payload.FileNo,
-		FilePath: payload.FilePath,
-		ChunkId:  payload.ChunkId,
+		FileNo:      payload.FileNo,
+		FilePath:    payload.FilePath,
+		FileName:    payload.FileName,
+		TotalChunks: payload.TotalChunks,
+		ChunkId:     payload.ChunkId,
 		AIResponse: gin.H{
 			"insights": []string{
 				"Good separation of concerns",
