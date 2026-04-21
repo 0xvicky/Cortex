@@ -10,7 +10,7 @@
 bin/
 pkg/
 tmp/
-
+clone/
 # 🔥 Air
 build-errors.log
 air.log

@@ -72,6 +72,12 @@ func ShouldProcess(path string, d fs.DirEntry) bool {
 	var name = d.Name()
 	var ext = filepath.Ext(name)
 
+	// skip files larger than 500KB
+	info, err := d.Info()
+	if err != nil || info.Size() > 500*1024 {
+		return false
+	}
+
 	//skip extensions
 	if constants.SkipExtensions[ext] {
 		return false

@@ -29,7 +29,7 @@ func (s *AnalyserService) Analyse(c *gin.Context, repo model.AnalyseRequest) (pr
 		return processor.RepoStorage{}, fmt.Errorf("uuid generation error:%w", uuidErr)
 	}
 	// create a unique folder in a tmp folder => /tmp/{uuid}
-	path := "Z:/Code/Golang/Projects/cortex/internal/tmp/repo/" + id.String()
+	path := "Z:/Code/Golang/Projects/cortex/clone/repo/" + id.String()
 	if pathErr := os.MkdirAll(path, os.ModePerm); pathErr != nil {
 		return processor.RepoStorage{}, fmt.Errorf("path creation error:%w", pathErr)
 	}
@@ -43,9 +43,9 @@ func (s *AnalyserService) Analyse(c *gin.Context, repo model.AnalyseRequest) (pr
 	var aggrWg sync.WaitGroup
 	aggrWg.Add(1)
 	h := processor.RepoStorage{Files: make(map[string][]model.AggregationResponse)}
-	var queue chan model.ChannelData = make(chan model.ChannelData, 100)
-	var aggrQueue chan model.AggregationResponse = make(chan model.AggregationResponse, 100)
-	const nWorkers int = 10
+	var queue chan model.ChannelData = make(chan model.ChannelData, 500)
+	var aggrQueue chan model.AggregationResponse = make(chan model.AggregationResponse, 500)
+	const nWorkers int = 100
 
 	go func() {
 		processor.AggregateResult(aggrQueue, &h, &aggrWg)

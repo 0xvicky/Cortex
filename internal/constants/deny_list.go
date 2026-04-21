@@ -248,6 +248,7 @@ var SkipExtensions = map[string]bool{
 	".gif":  true,
 	".bmp":  true,
 	".ico":  true,
+	".svg":  true,
 	".webp": true,
 	".tiff": true,
 	".tif":  true,
