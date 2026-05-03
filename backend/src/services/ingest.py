@@ -78,33 +78,34 @@ def process_file(ls: List[FileModel]) -> List[ChunkModel]:
     return chunks
 
 
-async def ingestr_svc(repo_url: str):
+def ingestr_svc(repo_url: str):
     print("in ingest svc")
+
     parsed = urlparse(repo_url)
     if parsed.netloc != "github.com":
         raise HTTPException(status_code=400, detail="Only GitHub repos allowed")
 
-    async with httpx.AsyncClient() as client:
-        res = await client.get(repo_url)
-        if res.status_code != 200:
-            raise HTTPException(status_code=400, detail="Invalid Github Repository")
+    # validate repo (use requests or httpx sync)
+    import requests
 
-    # create a local temp folder with unique name to store clone repo
+    res = requests.get(repo_url)
+    if res.status_code != 200:
+        raise HTTPException(status_code=400, detail="Invalid Github Repository")
+
     PATH = "Z:/Code/Golang/Projects/cortex/temp"
-    # generated unique id
-    repo_name = uuid.uuid8()
-    # clone that repo into that folder
+    repo_name = uuid.uuid4()
+
     print(repo_name)
+
     local_path = Path(f"{PATH}/{repo_name}")
-    # created the repo folder is not exist with parents
     local_path.mkdir(parents=True, exist_ok=True)
 
     cloned_repo = Repo.clone_from(repo_url, local_path)
     print(cloned_repo)
-    # Get files from the local path
+
     files = get_files(str(local_path))
-    # Get chunks
     chunks = process_file(files)
+
     return chunks
 
 

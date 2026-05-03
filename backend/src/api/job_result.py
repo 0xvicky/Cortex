@@ -10,7 +10,7 @@ router = APIRouter(prefix="/result", tags=["result"])
 
 
 @router.get("/{job_id}")
-async def result(job_id: str):
+def result(job_id: str):
     print(job_id)
     print("in res")
     job = get_job(job_id)

@@ -1,4 +1,4 @@
-# app/worker/connection.py
-import redis
+# app/worker/connection.pyf
+from redis import Redis
 
-redis_conn = redis.Redis(host="localhost", port=6379, db=0)
+redis_conn = Redis(host="localhost", port=6379, db=0)
