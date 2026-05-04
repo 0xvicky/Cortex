@@ -3,6 +3,7 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
 from langchain.agents import create_agent
 from dotenv import load_dotenv
+from src.services.llm import llm_query
 
 load_dotenv()
 
@@ -71,16 +72,6 @@ def query_svc(user_query: str):
     context_obj = build_context(search_result)
     context_prompt = context_to_prompt(context_obj)
     print(search_result)
-    llm = ChatGroq(
-        model="qwen/qwen3-32b",
-        temperature=0,
-        max_tokens=None,
-        reasoning_format="parsed",
-        timeout=None,
-        max_retries=2,
-        # other params...
-    )
-
     SYSTEM_PROMPT = f"""
     You are a senior software engineer.
 
@@ -95,12 +86,10 @@ def query_svc(user_query: str):
 
     Answer:
     """
-    agent = create_agent(
-        llm,
+
+    output = llm_query(
         system_prompt=SYSTEM_PROMPT,
+        user_query=user_query,
     )
 
-    result = agent.invoke({"messages": [{"role": "user", "content": user_query}]})
-
-    output = result["messages"][-1].content
     return output

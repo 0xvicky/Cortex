@@ -16,7 +16,8 @@ def ingest_repo(req: RequestRepo):
     job_id = str(uuid.uuid4())
     user_id = str(uuid.uuid4())
     print(q.connection, q.name)
-    create_job(job_id, user_id, "PENDING", None)
+    create_job(job_id, user_id)
+    print("here ")
     q.enqueue(
         run_pipeline,
         job_id,
