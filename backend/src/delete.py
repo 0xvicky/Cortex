@@ -16,4 +16,4 @@ for name in collection_names:
     print(f"Deleted: {name}")
 
 
-# redis_conn.flushdb()
+redis_conn.flushdb()

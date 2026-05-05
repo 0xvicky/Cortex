@@ -74,12 +74,7 @@ export default function JobsPage() {
             <div key={item} className="h-32 animate-pulse rounded-[2rem] border border-white/10 bg-white/5 p-6" />
           ))}
         </div>
-      ) : error ? (
-        <div className="rounded-[2rem] border border-rose-500/20 bg-rose-500/10 p-8 text-rose-100">
-          <p className="text-lg font-semibold">Unable to load jobs</p>
-          <p className="mt-3 text-sm text-rose-200">{error}</p>
-        </div>
-      ) : jobs.length === 0 ? (
+      ) :  jobs.length === 0 ? (
         <div className="rounded-[2rem] border border-white/10 bg-white/5 p-10 text-gray-400">
           <p className="text-2xl font-semibold text-white">No jobs yet.</p>
           <p className="mt-4 max-w-2xl text-base leading-7">Analyze a GitHub repository to generate a job and start asking follow-up questions.</p>

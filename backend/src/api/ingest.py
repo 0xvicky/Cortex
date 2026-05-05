@@ -5,6 +5,7 @@ from src.storage.storage import create_job
 from src.jobs.ingest_job import run_pipeline
 from src.utils.utils import generate_job_id
 from datetime import date
+import time
 
 import uuid
 
@@ -16,7 +17,8 @@ def ingest_repo(req: RequestRepo):
     repo_url = str(req.repo_url)  # normalize early
     user_id = req.user_id
     today = date.today()
-    job_id = generate_job_id(repo_url=repo_url, date=str(today))
+    timestamp = int(time.time())
+    job_id = generate_job_id(repo_url=repo_url, date=str(today), time=str(timestamp))
     # job_id = str(uuid.uuid4())
     # user_id = str(uuid.uuid4())
     print(q.connection, q.name)

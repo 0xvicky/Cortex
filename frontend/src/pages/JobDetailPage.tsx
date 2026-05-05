@@ -82,6 +82,7 @@ export default function JobDetailPage() {
       } catch (err) {
         if (!active) return
         setSummaryError(err instanceof Error ? err.message : 'Unable to load summary')
+        setStatus("failed")
         setSummaryLoading(false)
         clearInterval(intervalId)
       }
@@ -102,7 +103,7 @@ export default function JobDetailPage() {
     }, [messages, sending])
 
     const handleSend = async () => {
-        if (!question.trim() || sending || !job_id) return
+        if (!question.trim() || sending || !job_id || status !== "COMPLETED") return
 
         const text = question.trim()
         setMessages((current) => [...current, { id: `user-${Date.now()}`, role: 'user', text }])
@@ -291,10 +292,10 @@ export default function JobDetailPage() {
               <button
                 type="button"
                 onClick={handleSend}
-                disabled={!question.trim() || sending}
+                disabled={!question.trim() || sending || status=="PENDING" || status=="FAILED" }
                 className="inline-flex items-center justify-center rounded-[1.5rem] bg-gradient-to-r from-purple-600 to-violet-600 px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_50px_-30px_rgba(124,58,237,0.9)] transition duration-200 hover:shadow-[0_22px_80px_-40px_rgba(124,58,237,0.8)] disabled:cursor-not-allowed disabled:bg-slate-700 disabled:shadow-none"
               >
-                {sending ? 'Sending...' : 'Send question'}
+              {status == "PENDING" ? "Embedding" : sending ? 'Sending...' : 'Send question'}
               </button>
             </div>
             {chatError ? <p className="text-sm text-rose-300">{chatError}</p> : null}

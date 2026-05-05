@@ -21,6 +21,15 @@ def create_job(job_id, user_id, repo_url):
     # redis.rpush(user_id, json.dumps(job))
 
 
+def update_job(job_id, user_id, key, value):
+    data = redis.hget(user_id, job_id)
+    if not data:
+        return
+    job = json.loads(data.decode())
+    job[key] = value
+    redis.hset(user_id, job_id, json.dumps(job))
+
+
 def store_repo_summary(job_id: str, repo_summary: dict, repo_url: str, user_id: str):
     data = redis.hget(user_id, job_id)  # read from hash, not plain key
     if not data:
@@ -30,7 +39,6 @@ def store_repo_summary(job_id: str, repo_summary: dict, repo_url: str, user_id: 
 
     job["repo_summary"] = repo_summary
     job["repo_url"] = repo_url
-    job["status"] = "COMPLETED"
 
     redis.hset(user_id, job_id, json.dumps(job))  # write back to hash
 

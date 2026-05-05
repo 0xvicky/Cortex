@@ -68,24 +68,25 @@ def query_svc(user_query: str, job_id: str):
         url="http://localhost:6333",
     )
 
-    search_result = vector_store.similarity_search(query=user_query, k=10)
+    search_result = vector_store.similarity_search(query=user_query, k=5)
     context_obj = build_context(search_result)
     context_prompt = context_to_prompt(context_obj)
     print(search_result)
     SYSTEM_PROMPT = f"""
-    You are a senior software engineer.
+        You are a senior software engineer deeply familiar with this codebase.
 
-    Answer the question ONLY using the provided context.
-    If the answer is not in the context, say "Not found in codebase".
+        Answer the user's question using the provided context.
+        If the exact answer isn't available, reason from what is available and give your best engineering judgment — stay grounded in the codebase, never go off-topic.
+        Keep responses concise and to the point.
 
-    Context:
-    {context_prompt}
+        Context:
+        {context_prompt}
 
-    Question:
-    {user_query}
+        Question:
+        {user_query}
 
-    Answer:
-    """
+        Answer:
+        """
 
     output = llm_query(
         system_prompt=SYSTEM_PROMPT,

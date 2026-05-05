@@ -62,7 +62,7 @@ def should_process(path: str) -> bool:
     return True
 
 
-def generate_job_id(repo_url: str, date: str) -> str:
-    payload = json.dumps({"repo_url": repo_url, "date": date})
+def generate_job_id(repo_url: str, date: str, time: str) -> str:
+    payload = json.dumps({"repo_url": repo_url, "date": date, "time": time})
     # print(base64.urlsafe_b64encode(payload.encode()).decode())
     return base64.urlsafe_b64encode(payload.encode()).decode()

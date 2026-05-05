@@ -28,9 +28,14 @@ def embed_chunks(job_id, chunks: List[ChunkModel]):
         )
 
     embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-small-en")
-    print(embeddings)
-    vector_store = QdrantVectorStore.from_documents(
-        docs, embeddings, collection_name=job_id, url="http://localhost:6333"
-    )
+    # print(embeddings)
 
-    print(vector_store)
+    try:
+        vector_store = QdrantVectorStore.from_documents(
+            docs, embeddings, collection_name=job_id, url="http://localhost:6333"
+        )
+
+        return True
+    except Exception as e:
+        return False
+    # print(vector_store)
