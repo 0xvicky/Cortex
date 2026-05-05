@@ -20,24 +20,25 @@ async function apiRequest<T>(path: string, options: RequestInit = {}) {
   return data as T
 }
 
-export async function createJob(repo_url: string) {
+export async function createJob(repoUrl: string, userId:string) {
   return apiRequest<{ job_id: string }>('/ingest/repo', {
     method: 'POST',
-    body: JSON.stringify({ repo_url }),
+    body: JSON.stringify({ repoUrl,userId }),
   })
 }
 
-export async function fetchJobs() {
-  return apiRequest<{ jobs: { job_id: string; repo_url: string; created_at: string }[] }>('/jobs')
+export async function fetchJobs(userId:string) {
+  return apiRequest<{ res: { job_id: string}[] }>(`/jobs/${userId}`)
 }
 
-export async function fetchSummary(job_id: string) {
-  return apiRequest<{ job: { job_id: string; repo_url?: string; status?: string; repo_summary?: RepoSummary | null; owner:string; repo_name:string }  }>(`/result/${job_id}`)
+export async function fetchSummary(job_id: string,user_id:string) {
+    console.log(user_id, job_id)
+  return apiRequest<{ job: { job_id: string; repo_url?: string; status?: string; repo_summary?: RepoSummary | null;  }  }>(`/result/${user_id}/${job_id}`)
 }
 
-export async function queryJob(job_id: string, question: string) {
+export async function queryJob(jobId: string, userQuery: string) {
   return apiRequest<{ answer: string }>('/user-query', {
     method: 'POST',
-    body: JSON.stringify({ job_id, question }),
+    body: JSON.stringify({ jobId, userQuery }),
   })
 }

@@ -30,7 +30,7 @@ def embed_chunks(job_id, chunks: List[ChunkModel]):
     embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-small-en")
     print(embeddings)
     vector_store = QdrantVectorStore.from_documents(
-        docs, embeddings, collection_name="cortex_vecdb", url="http://localhost:6333"
+        docs, embeddings, collection_name=job_id, url="http://localhost:6333"
     )
 
     print(vector_store)

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { createJob } from '../api'
 import { Octokit } from "@octokit/rest";
 // const repoPattern = /^https:\/\/github\.com\/([^/]+)\/([^/]+)(?:\/)?$/
-
+import { getOwner } from '../utils/utils';
 const octokit = new Octokit({ auth: import.meta.env.VITE_GITHUB_TOKEN });
 
 
@@ -17,6 +17,7 @@ export default function HomePage() {
   const [checking, setChecking] = useState(false)
   const [validRepo, setValidRepo] = useState(false)
   const navigate = useNavigate()
+  const userId = "whyvickyyy";
 
   const trimmedRepoUrl = repoUrl.trim()
   const showError = touched && trimmedRepoUrl.length > 0 && !validRepo && !checking
@@ -35,10 +36,8 @@ export default function HomePage() {
     }
 
     try {
-      const parsed = new URL(url)
-      const isGithub = parsed.hostname === 'github.com'
-      const parts = parsed.pathname.replace(/^\/|\/$/g, '').split('/')
-
+        const{parts, isGithub} = getOwner(url);
+      
       if (!isGithub || parts.length < 2) {
         setValidRepo(false)
         return
@@ -48,7 +47,7 @@ export default function HomePage() {
       await octokit.repos.get({ owner, repo })
       setValidRepo(true)
     } catch (err) {
-      setValidRepo(false)
+      setValidRepo(false)   
     } finally {
       setChecking(false)
     }
@@ -64,8 +63,8 @@ export default function HomePage() {
 
     try {
       setLoading(true)
-      const result = await createJob(trimmedRepoUrl)
-      navigate(`/jobs/${result.job_id}`)
+      const result = await createJob(trimmedRepoUrl,userId)
+      navigate(`/jobs/${userId}/${result.job_id}`)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unable to analyze repo')
     } finally {

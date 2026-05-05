@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { fetchSummary, queryJob } from '../api'
 import type { RepoSummary, RepoOwner } from '../types'
-
+import { getOwner } from '../utils/utils'
 interface ChatMessage {
   id: string
   role: 'user' | 'ai'
@@ -29,7 +29,7 @@ function typingDots() {
 export default function JobDetailPage() {
 //   const { job_id  } = useParams()
   const navigate = useNavigate()
-  const {job_id} = useParams()
+  const {userId,job_id} = useParams()
   const [summary, setSummary] = useState<RepoSummary | null>(null)
   const [status, setStatus] = useState<string>('pending')
   const [summaryError, setSummaryError] = useState<string | null>(null)
@@ -41,13 +41,15 @@ export default function JobDetailPage() {
   const messagesRef = useRef<HTMLDivElement | null>(null)
   const [repoOwner, setRepoOwner] = useState<RepoOwner | null>(null)
   const location = useLocation()
-
+//   const userId = "whyvickyyy"
   // Access data from location.state
 //   const {repoDet} = location.state;
 //   console.log(repoDet)
   const repoName = `${repoOwner?.owner}/${repoOwner?.repoName}`
 //   console.log(repoName)
 // const repoName = 
+
+// console.log(userId)
   useEffect(() => {
     if (!job_id) return
 
@@ -56,18 +58,19 @@ export default function JobDetailPage() {
 
     const loadSummary = async () => {
       try {
-        const data = await fetchSummary(job_id)
+        const data = await fetchSummary(job_id,userId)
         // console.log("in detail page")
-        console.log(data)
-
+        // console.log(data)
+        // console.log(data)
+        const {parts} = getOwner(data?.job.repo_url);
+        const [owner, repo] = parts
         if (!active) return
-
         if (data.job?.repo_summary) {
+            setRepoOwner({
+              owner, repoName:repo
+            })
           
           setSummary(data.job.repo_summary)
-          setRepoOwner({
-            owner:data.job.owner, repoName:data.job.repo_name
-          })
           setStatus(data.job.status || 'completed')
           setSummaryLoading(false)
           clearInterval(intervalId)
@@ -88,36 +91,37 @@ export default function JobDetailPage() {
     intervalId = window.setInterval(loadSummary, 3000)
 
     return () => {
-      active = false
-      clearInterval(intervalId)
+        active = false
+        clearInterval(intervalId)
+        }
+    }, [job_id])
+
+    useEffect(() => {
+        if (!messagesRef.current) return
+        messagesRef.current.scrollTop = messagesRef.current.scrollHeight
+    }, [messages, sending])
+
+    const handleSend = async () => {
+        if (!question.trim() || sending || !job_id) return
+
+        const text = question.trim()
+        setMessages((current) => [...current, { id: `user-${Date.now()}`, role: 'user', text }])
+        setQuestion('')
+        setChatError(null)
+        setSending(true)
+
+        try {
+        const data = await queryJob(job_id, text)
+        console.log(data)
+        setMessages((current) => [...current, { id: `ai-${Date.now()}`, role: 'ai', text: data.res }])
+        } catch (err) {
+        setChatError(err instanceof Error ? err.message : 'Unable to send question')
+        } finally {
+        setSending(false)
+        }
     }
-  }, [job_id])
 
-  useEffect(() => {
-    if (!messagesRef.current) return
-    messagesRef.current.scrollTop = messagesRef.current.scrollHeight
-  }, [messages, sending])
-
-  const handleSend = async () => {
-    if (!question.trim() || sending || !job_id) return
-
-    const text = question.trim()
-    setMessages((current) => [...current, { id: `user-${Date.now()}`, role: 'user', text }])
-    setQuestion('')
-    setChatError(null)
-    setSending(true)
-
-    try {
-      const data = await queryJob(job_id, text)
-      setMessages((current) => [...current, { id: `ai-${Date.now()}`, role: 'ai', text: data.answer }])
-    } catch (err) {
-      setChatError(err instanceof Error ? err.message : 'Unable to send question')
-    } finally {
-      setSending(false)
-    }
-  }
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault()
       handleSend()
@@ -251,19 +255,19 @@ export default function JobDetailPage() {
             <h2 className="text-2xl sm:text-3xl font-semibold text-white truncate">Ask about the repo</h2>
             {sending ? typingDots() : null}
           </div>
-          <div ref={messagesRef} className="mb-6 max-h-[280px] sm:max-h-[420px] space-y-4 overflow-y-auto rounded-[1.75rem] border border-white/10 bg-slate-950/90 p-5">
+          <div ref={messagesRef} className="mb-6 max-h-[280px] sm:max-h-[420px] space-y-4 overflow-y-auto overflow-x-hidden rounded-[1.75rem] border border-white/10 bg-slate-950/90 p-5">
             {messages.length === 0 ? (
               <div className="rounded-[1.5rem] bg-slate-900/80 p-5 text-gray-400">Start by asking a question about the repository.</div>
             ) : (
               messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`rounded-[1.75rem] border p-4 text-sm leading-7 ${message.role === 'user'
+                  className={`rounded-[1.75rem] border p-4 text-sm leading-7 overflow-hidden ${message.role === 'user'
                     ? 'ml-auto max-w-[85%] border-white/10 bg-violet-500/10 text-white shadow-[0_20px_60px_-40px_rgba(124,58,237,0.6)]'
                     : 'mr-auto max-w-[85%] border-white/10 bg-slate-900 text-gray-100'}`}
                 >
                   {message.role === 'user' ? <p className="text-xs uppercase tracking-[0.25em] text-purple-300">You</p> : <p className="text-xs uppercase tracking-[0.25em] text-gray-400">AI</p>}
-                  <p className="mt-3 whitespace-pre-wrap">{message.text}</p>
+                  <p className="mt-3 whitespace-pre-wrap break-words">{message.text}</p>
                 </div>
               ))
             )}

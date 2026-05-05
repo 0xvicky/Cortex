@@ -12,5 +12,5 @@ router = APIRouter(prefix="/user-query", tags=["result"])
 def query(r: UserQuery):
     # print(job_id)
     # print("in res")
-    res = query_svc(user_query=r.user_query)
+    res = query_svc(user_query=r.user_query, job_id=r.job_id)
     return {"res": res}

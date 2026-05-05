@@ -2,6 +2,9 @@ import os
 import fnmatch
 import mimetypes
 from src.constants import constants
+import base64
+import json
+from datetime import date
 
 SKIP_EXTENSIONS = constants.SKIP_EXTENSIONS
 SKIP_FILENAME_PATTERNS = constants.SKIP_FILENAME_PATTERNS
@@ -57,3 +60,9 @@ def should_process(path: str) -> bool:
         return False
 
     return True
+
+
+def generate_job_id(repo_url: str, date: str) -> str:
+    payload = json.dumps({"repo_url": repo_url, "date": date})
+    # print(base64.urlsafe_b64encode(payload.encode()).decode())
+    return base64.urlsafe_b64encode(payload.encode()).decode()

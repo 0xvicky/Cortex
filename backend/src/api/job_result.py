@@ -9,11 +9,11 @@ import uuid
 router = APIRouter(prefix="/result", tags=["result"])
 
 
-@router.get("/{job_id}")
-def result(job_id: str):
+@router.get("/{user_id}/{job_id}")
+def result(user_id: str, job_id: str):
     print(job_id)
     print("in res")
-    job = get_job(job_id)
+    job = get_job(job_id, user_id)
     if not job:
         return {"error": "Job not found"}
     return {"job": job}

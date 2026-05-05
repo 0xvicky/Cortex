@@ -57,14 +57,14 @@ def context_to_prompt(context):
     return prompt
 
 
-def query_svc(user_query: str):
+def query_svc(user_query: str, job_id: str):
     print(user_query)
 
     embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-small-en")
 
     vector_store = QdrantVectorStore.from_existing_collection(
         embedding=embeddings,
-        collection_name="cortex_vecdb",
+        collection_name=job_id,
         url="http://localhost:6333",
     )
 

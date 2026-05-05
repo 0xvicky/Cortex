@@ -277,7 +277,7 @@ def chunk_files(
 # ─────────────────────────────────────────────
 
 
-def ingestr_svc(repo_url: str, job_id: str) -> List[ChunkModel]:
+def ingestr_svc(repo_url: str, job_id: str, user_id: str) -> List[ChunkModel]:
     # 1. validate
     # owner, repo = validate_github_repo(repo_url)
 
@@ -290,7 +290,9 @@ def ingestr_svc(repo_url: str, job_id: str) -> List[ChunkModel]:
     # 3. quick summary — 1 LLM call, runs first
     summary = generate_repo_summary(str(local_path), repo_url)
 
-    store_repo_summary(job_id=job_id, repo_summary=summary)
+    store_repo_summary(
+        job_id=job_id, repo_summary=summary, repo_url=repo_url, user_id=user_id
+    )
     print(f"[ingest] summary stored for job {job_id}")
 
     # 4. RAG chunking — all files, sliding window

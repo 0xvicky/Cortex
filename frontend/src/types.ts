@@ -1,7 +1,7 @@
 export interface JobRecord {
-  job_id: string
-  repo_url: string
-  created_at: string
+    jobId:string
+    repo_url:string
+    date:string  
 }
 
 export interface IngestRequest {

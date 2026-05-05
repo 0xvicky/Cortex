@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { fetchJobs } from '../api'
 import type { JobRecord } from '../types'
-
+import { decodeJobId } from '../utils/utils'
 const repoPattern = /^https:\/\/github\.com\/([^/]+)\/([^/]+)(?:\/)?$/
-
+const userId = "whyvickyyy"
 function formatRepoName(repo_url: string) {
   const match = repoPattern.exec(repo_url)
   return match ? `${match[1]}/${match[2]}` : repo_url
@@ -25,20 +25,25 @@ export default function JobsPage() {
 
   useEffect(() => {
     let active = true
-
+    // let inActive = false
     async function loadJobs() {
-      try {
-        const data = await fetchJobs()
-        if (!active) return
-        setJobs(data.jobs || [])
-      } catch (err) {
-        if (!active) return
-        setError(err instanceof Error ? err.message : 'Unable to load jobs')
-      } finally {
-        if (!active) return
-        setLoading(false)
+        try {
+          const data = await fetchJobs(userId)
+          const decodedJobs = data.res.map((job) => {
+            const decodedJob = decodeJobId(job)
+            decodedJob.jobId = job
+            return decodedJob
+          })
+          if (!active) return
+          setJobs(decodedJobs)  // single set, no appending
+        } catch (err) {
+          if (!active) return
+          setError(err instanceof Error ? err.message : 'Unable to load jobs')
+        } finally {
+          if (!active) return
+          setLoading(false)
+        }
       }
-    }
 
     loadJobs()
     return () => {
@@ -46,6 +51,10 @@ export default function JobsPage() {
     }
   }, [])
 
+
+//   console.log(jobs)
+
+  
   return (
     <section className="space-y-10">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -79,19 +88,19 @@ export default function JobsPage() {
         <div className="grid gap-5">
           {jobs.map((job) => (
             <button
-              key={job.job_id}
+              key={job?.jobId}
               type="button"
-              onClick={() => navigate(`/jobs/${job.job_id}`)}
+              onClick={() => navigate(`/jobs/${userId}/${job?.jobId}`)}
               className="w-full text-left rounded-[2rem] border border-white/10 bg-white/5 p-8 transition duration-200 hover:border-purple-500/30 hover:shadow-[0_24px_60px_-36px_rgba(124,58,237,0.6)]"
             >
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="text-sm uppercase tracking-[0.3em] text-gray-400">{formatRepoName(job.repo_url)}</p>
-                  <p className="mt-3 max-w-xl text-base leading-7 text-white">{job.repo_url}</p>
+                  <p className="text-sm uppercase tracking-[0.3em] text-gray-400">{formatRepoName(job?.repo_url)}</p>
+                  <p className="mt-3 max-w-xl text-base leading-7 text-white">{job?.repo_url}</p>
                 </div>
                 <div className="space-y-2 text-right">
-                  <p className="text-sm text-gray-400">Job ID <span className="font-semibold text-white">{job.job_id.slice(0, 8)}</span></p>
-                  <p className="text-sm text-gray-400">{formatDate(job.created_at)}</p>
+                  <p className="text-sm text-gray-400">Job ID <span className="font-semibold text-white">{job?.jobId?.slice(0, 8)}</span></p>
+                  <p className="text-sm text-gray-400">{job?.date}</p>
                 </div>
               </div>
             </button>

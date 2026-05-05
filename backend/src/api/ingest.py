@@ -3,6 +3,8 @@ from src.models.req import RequestRepo
 from src.worker.queue import q
 from src.storage.storage import create_job
 from src.jobs.ingest_job import run_pipeline
+from src.utils.utils import generate_job_id
+from datetime import date
 
 import uuid
 
@@ -12,11 +14,13 @@ router = APIRouter(prefix="/ingest", tags=["analysis", "ingest"])
 @router.post("/repo")
 def ingest_repo(req: RequestRepo):
     repo_url = str(req.repo_url)  # normalize early
-
-    job_id = str(uuid.uuid4())
-    user_id = str(uuid.uuid4())
+    user_id = req.user_id
+    today = date.today()
+    job_id = generate_job_id(repo_url=repo_url, date=str(today))
+    # job_id = str(uuid.uuid4())
+    # user_id = str(uuid.uuid4())
     print(q.connection, q.name)
-    create_job(job_id, user_id)
+    create_job(job_id, user_id, repo_url)
     print("here ")
     q.enqueue(
         run_pipeline,

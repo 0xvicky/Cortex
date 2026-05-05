@@ -26,14 +26,15 @@ function AppShell() {
           </Link>
           <nav className="ml-auto flex items-center gap-4">
   <ActiveNav to="/">Home</ActiveNav>
+  <ActiveNav to="/jobs">Jobs</ActiveNav>
 </nav>
         </header>
 
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            {/* <Route path="/jobs" element={<JobsPage />} /> */}
-            <Route path="/jobs/:job_id" element={<JobDetailPage />} />
+            <Route path="/jobs" element={<JobsPage />} />
+            <Route path="/jobs/:userId/:job_id" element={<JobDetailPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
