@@ -2,7 +2,7 @@ from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from src.models.req import RequestRepo
 from src.services.ingest import ingestr_svc
 from typing import Optional
-from src.worker.queue import q
+from src.worker.rq_worker import q
 from src.storage.storage import get_job
 import uuid
 

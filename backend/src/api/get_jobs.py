@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from src.models.req import RequestRepo
-from src.worker.queue import q
+from src.worker.rq_worker import q
 from src.storage.storage import get_all_jobs
 from src.jobs.ingest_job import run_pipeline
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from src.models.req import RequestRepo
-from src.worker.queue import q
+from src.worker.rq_worker import q
 from src.storage.storage import create_job
 from src.jobs.ingest_job import run_pipeline
 from src.utils.utils import generate_job_id
@@ -21,7 +21,7 @@ def ingest_repo(req: RequestRepo):
     job_id = generate_job_id(repo_url=repo_url, date=str(today), time=str(timestamp))
     # job_id = str(uuid.uuid4())
     # user_id = str(uuid.uuid4())
-    print(q.connection, q.name)
+    # print(q.connection, q.name)
     create_job(job_id, user_id, repo_url)
     print("here ")
     q.enqueue(

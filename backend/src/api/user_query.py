@@ -3,7 +3,7 @@ from src.models.user_query import UserQuery
 
 from src.services.query_svc import query_svc
 
-from src.worker.queue import q
+from src.worker.rq_worker import q
 
 router = APIRouter(prefix="/user-query", tags=["result"])
 

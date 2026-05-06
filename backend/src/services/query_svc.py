@@ -4,6 +4,7 @@ from langchain_groq import ChatGroq
 from langchain.agents import create_agent
 from dotenv import load_dotenv
 from src.services.llm import llm_query
+import os
 
 load_dotenv()
 
@@ -65,7 +66,8 @@ def query_svc(user_query: str, job_id: str):
     vector_store = QdrantVectorStore.from_existing_collection(
         embedding=embeddings,
         collection_name=job_id,
-        url="http://localhost:6333",
+        url=os.getenv("QDRANT_URL"),
+        api_key=os.getenv("QDRANT_API_KEY"),
     )
 
     search_result = vector_store.similarity_search(query=user_query, k=5)

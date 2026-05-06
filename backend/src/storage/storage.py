@@ -5,8 +5,21 @@ from redis import Redis
 import json
 from typing import Optional
 from src.models.file import FileModel
+from redis import Redis
+from dotenv import load_dotenv
+import os
 
-redis = Redis(host="localhost", port=6379, db=0)
+load_dotenv()
+
+# redis = Redis(
+#     host="localhost",
+#     port=6379,
+#     db=0,
+# )
+
+# print(os.getenv("UPSTASH_REDIS_REST_TOKEN"))
+
+redis = Redis.from_url(os.getenv("REDIS_URL"))
 
 
 def create_job(job_id, user_id, repo_url):

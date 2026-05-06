@@ -6,6 +6,10 @@ from langchain_qdrant import QdrantVectorStore
 from langchain_core.documents import Document
 from typing import List
 from src.models.chunks import ChunkModel
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def embed_chunks(job_id, chunks: List[ChunkModel]):
@@ -32,7 +36,11 @@ def embed_chunks(job_id, chunks: List[ChunkModel]):
 
     try:
         vector_store = QdrantVectorStore.from_documents(
-            docs, embeddings, collection_name=job_id, url="http://localhost:6333"
+            docs,
+            embeddings,
+            collection_name=job_id,
+            url=os.getenv("QDRANT_URL"),
+            api_key=os.getenv("QDRANT_API_KEY"),
         )
 
         return True
