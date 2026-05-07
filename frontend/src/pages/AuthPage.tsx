@@ -2,7 +2,7 @@ import { GoogleLogin, type CredentialResponse } from '@react-oauth/google'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { jwtDecode } from 'jwt-decode'
-
+import {handleGoogleAuth} from '../api'
 interface GoogleJWT {
   email: string
   name: string
@@ -14,17 +14,19 @@ export default function AuthPage() {
   const navigate = useNavigate()
   const { login } = useAuth()
 
-  const handleSuccess = (credentialResponse: CredentialResponse) => {
+  const handleSuccess = async(credentialResponse: CredentialResponse) => {
     if (!credentialResponse.credential) return
 
     try {
+      const {token} =await handleGoogleAuth(credentialResponse.credential)
+      console.log(token)
       const decoded = jwtDecode<GoogleJWT>(credentialResponse.credential)
-
       login({
         id: decoded.sub,
         email: decoded.email,
         name: decoded.name,
         picture: decoded.picture,
+        jwt:token
       })
 
       navigate('/')

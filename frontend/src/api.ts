@@ -6,6 +6,7 @@ async function apiRequest<T>(path: string, options: RequestInit = {}) {
   const response = await fetch(`${BASE_URL}${path}`, {
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('authUser') ? JSON.parse(localStorage.getItem('authUser')!).jwt : ''}`,
     },
     ...options,
   })
@@ -18,6 +19,12 @@ async function apiRequest<T>(path: string, options: RequestInit = {}) {
   }
 
   return data as T
+}
+export async function handleGoogleAuth(googleToken:string){
+    return apiRequest<{token:string}>('/auth', {
+        method: 'POST',
+        body: JSON.stringify({ token: googleToken }),
+      })
 }
 
 export async function createJob(repoUrl: string, userId:string) {

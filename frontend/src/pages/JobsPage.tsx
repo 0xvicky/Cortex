@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import { fetchJobs } from '../api'
 import type { JobRecord } from '../types'
 import { decodeJobId } from '../utils/utils'
 const repoPattern = /^https:\/\/github\.com\/([^/]+)\/([^/]+)(?:\/)?$/
-const userId = "whyvickyyy"
+
 function formatRepoName(repo_url: string) {
   const match = repoPattern.exec(repo_url)
   return match ? `${match[1]}/${match[2]}` : repo_url
@@ -22,6 +23,9 @@ export default function JobsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
+
+  const { user } = useAuth();
+  const userId = user?.id || ''
 
   useEffect(() => {
     let active = true

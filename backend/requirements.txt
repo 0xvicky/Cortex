@@ -19,6 +19,7 @@ dataclasses-json==0.6.7
 distro==1.9.0
 dnspython==2.8.0
 dotenv==0.9.9
+ecdsa==0.19.2
 email-validator==2.3.0
 fastapi==0.136.1
 fastapi-cli==0.0.24
@@ -29,6 +30,7 @@ frozenlist==1.8.0
 fsspec==2026.4.0
 gitdb==4.0.12
 GitPython==3.1.49
+google-auth==2.51.0
 greenlet==3.5.0
 groq==0.37.1
 grpcio==1.80.0
@@ -45,6 +47,7 @@ hyperframe==6.1.0
 idna==3.13
 Jinja2==3.1.6
 joblib==1.5.3
+jose==1.0.0
 jsonpatch==1.33
 jsonpointer==3.1.1
 langchain==1.2.17
@@ -90,6 +93,8 @@ packaging==26.2
 portalocker==3.2.0
 propcache==0.4.1
 protobuf==7.34.1
+pyasn1==0.6.3
+pyasn1_modules==0.4.2
 pycparser==3.0
 pydantic==2.13.3
 pydantic-extra-types==2.11.1
@@ -101,6 +106,7 @@ PyJWT==2.12.1
 PyNaCl==1.6.2
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.2
+python-jose==3.5.0
 python-multipart==0.0.27
 PyYAML==6.0.3
 qdrant-client==1.17.1
@@ -112,6 +118,7 @@ rich==15.0.0
 rich-toolkit==0.19.7
 rignore==0.7.6
 rq==1.16.1
+rsa==4.9.1
 safetensors==0.7.0
 scikit-learn==1.8.0
 scipy==1.17.1

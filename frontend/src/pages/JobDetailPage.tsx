@@ -41,10 +41,7 @@ export default function JobDetailPage() {
   const messagesRef = useRef<HTMLDivElement | null>(null)
   const [repoOwner, setRepoOwner] = useState<RepoOwner | null>(null)
   const location = useLocation()
-//   const userId = "whyvickyyy"
-  // Access data from location.state
-//   const {repoDet} = location.state;
-//   console.log(repoDet)
+
   const repoName = `${repoOwner?.owner}/${repoOwner?.repoName}`
 //   console.log(repoName)
 // const repoName = 

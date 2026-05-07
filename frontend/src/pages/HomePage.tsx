@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import {useAuth} from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { createJob } from '../api'
 import { Octokit } from "@octokit/rest";
@@ -17,8 +18,8 @@ export default function HomePage() {
   const [checking, setChecking] = useState(false)
   const [validRepo, setValidRepo] = useState(false)
   const navigate = useNavigate()
-  const userId = "whyvickyyy";
-
+  const { user } = useAuth();
+  const userId = user?.id || ''
   const trimmedRepoUrl = repoUrl.trim()
   const showError = touched && trimmedRepoUrl.length > 0 && !validRepo && !checking
   const helperText = showError
