@@ -1,28 +1,27 @@
 import os
 import re
-import uuid
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 from urllib.parse import urlparse
-
 from dotenv import load_dotenv
 from fastapi import HTTPException
 from git import Repo
 from github import Github, UnknownObjectException
-
 from src.constants import constants
 from src.models.chunks import ChunkModel
 from src.models.file import FileModel
 from src.services.llm import llm_query
 from src.storage.storage import store_repo_summary
 from src.utils.utils import should_process
+import tempfile
+import shutil
 import json
 
 load_dotenv()
 
 g = Github(os.getenv("GITHUB_TOKEN"))
 
-PATH = "Z:/Code/Golang/Projects/cortex/temp"
+PATH = tempfile.mkdtemp()
 SKIP_DIRS = constants.SKIP_DIRS
 
 ALLOWED_EXTENSIONS = {
@@ -277,11 +276,13 @@ def chunk_files(
 # ─────────────────────────────────────────────
 
 
-def ingestr_svc(repo_url: str, job_id: str, user_id: str) -> List[ChunkModel]:
-    # 1. validate
-    # owner, repo = validate_github_repo(repo_url)
+def cleanup_local_repo(path: str):
+    """Delete the cloned repo to save space."""
+    shutil.rmtree(path, ignore_errors=True)
 
-    # 2. clone
+
+def ingestr_svc(repo_url: str, job_id: str, user_id: str) -> List[ChunkModel]:
+
     local_path = Path(f"{PATH}/{job_id}")
     local_path.mkdir(parents=True, exist_ok=True)
     Repo.clone_from(repo_url, local_path)
@@ -298,7 +299,9 @@ def ingestr_svc(repo_url: str, job_id: str, user_id: str) -> List[ChunkModel]:
     # 4. RAG chunking — all files, sliding window
     files = get_files(str(local_path))
     chunks = chunk_files(files)
-
     print(f"[ingest] {len(chunks)} chunks ready for embedding")
+
+    # 5. Cleanup cloned repo to save space
+    cleanup_local_repo(str(local_path))
 
     return chunks

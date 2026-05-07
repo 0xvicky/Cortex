@@ -1,26 +1,12 @@
-from src.models.storage import JobModel
-from src.models.chunks import ChunkModel
-from typing import Dict
 from redis import Redis
 import json
-from typing import Optional
-from src.models.file import FileModel
 from redis import Redis
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 
-# redis = Redis(
-#     host="localhost",
-#     port=6379,
-#     db=0,
-# )
-
-# print(os.getenv("UPSTASH_REDIS_REST_TOKEN"))
-
 redis = Redis.from_url(os.getenv("REDIS_URL"))
-
 
 def create_job(job_id, user_id, repo_url):
     job = {
@@ -31,7 +17,7 @@ def create_job(job_id, user_id, repo_url):
         "repo_summary": None,
     }
     redis.hset(user_id, job_id, json.dumps(job))
-    # redis.rpush(user_id, json.dumps(job))
+    
 
 
 def update_job(job_id, user_id, key, value):

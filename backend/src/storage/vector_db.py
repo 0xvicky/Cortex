@@ -1,7 +1,4 @@
-from qdrant_client import QdrantClient
-from qdrant_client.models import VectorParams, Distance
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Qdrant
 from langchain_qdrant import QdrantVectorStore
 from langchain_core.documents import Document
 from typing import List
@@ -32,7 +29,6 @@ def embed_chunks(job_id, chunks: List[ChunkModel]):
         )
 
     embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-small-en")
-    # print(embeddings)
 
     try:
         vector_store = QdrantVectorStore.from_documents(
@@ -46,4 +42,4 @@ def embed_chunks(job_id, chunks: List[ChunkModel]):
         return True
     except Exception as e:
         return False
-    # print(vector_store)
+    

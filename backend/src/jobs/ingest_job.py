@@ -19,6 +19,3 @@ def run_pipeline(job_id: str, repo_url: str, user_id: str):
     except Exception as e:
         update_job(job_id=job_id, user_id=user_id, key="status", value="FAILED")
         raise e
-
-
-# Z:\Code\Golang\Projects\cortex\temp\be3f0530-51e7-4911-a694-d04f4d180357

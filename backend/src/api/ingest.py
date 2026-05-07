@@ -7,7 +7,6 @@ from src.utils.utils import generate_job_id
 from datetime import date
 import time
 
-import uuid
 
 router = APIRouter(prefix="/ingest", tags=["analysis", "ingest"])
 
@@ -18,12 +17,10 @@ def ingest_repo(req: RequestRepo):
     user_id = req.user_id
     today = date.today()
     timestamp = int(time.time())
+    
     job_id = generate_job_id(repo_url=repo_url, date=str(today), time=str(timestamp))
-    # job_id = str(uuid.uuid4())
-    # user_id = str(uuid.uuid4())
-    # print(q.connection, q.name)
+    
     create_job(job_id, user_id, repo_url)
-    print("here ")
     q.enqueue(
         run_pipeline,
         job_id,

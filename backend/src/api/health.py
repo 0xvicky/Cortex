@@ -1,17 +1,10 @@
 from fastapi import APIRouter
 import os
-import re
-import uuid
-from pathlib import Path
-from typing import List, Optional
-from urllib.parse import urlparse
 from src.models.test import TestRepo
-from dotenv import load_dotenv
-from fastapi import HTTPException
 import base64
 import json
 
-from github import Github, UnknownObjectException
+from github import Github
 
 g = Github(os.getenv("GITHUB_TOKEN"))
 

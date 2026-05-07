@@ -1,7 +1,5 @@
 from langchain_qdrant import QdrantVectorStore
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_groq import ChatGroq
-from langchain.agents import create_agent
 from dotenv import load_dotenv
 from src.services.llm import llm_query
 import os
