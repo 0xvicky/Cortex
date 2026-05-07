@@ -7,6 +7,8 @@ import os
 load_dotenv()
 
 redis = Redis.from_url(os.getenv("REDIS_URL"))
+print(redis)
+
 
 def create_job(job_id, user_id, repo_url):
     job = {
@@ -17,7 +19,6 @@ def create_job(job_id, user_id, repo_url):
         "repo_summary": None,
     }
     redis.hset(user_id, job_id, json.dumps(job))
-    
 
 
 def update_job(job_id, user_id, key, value):

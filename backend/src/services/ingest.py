@@ -278,6 +278,7 @@ def chunk_files(
 
 def cleanup_local_repo(path: str):
     """Delete the cloned repo to save space."""
+    print("cleaning up local repo...")
     shutil.rmtree(path, ignore_errors=True)
 
 

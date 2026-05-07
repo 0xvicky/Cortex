@@ -65,15 +65,20 @@ export default function JobDetailPage() {
         const {parts} = getOwner(data?.job.repo_url);
         const [owner, repo] = parts
         if (!active) return
+        
         if (data.job?.repo_summary) {
             setRepoOwner({
               owner, repoName:repo
             })
-          
           setSummary(data.job.repo_summary)
-          setStatus(data.job.status || 'completed')
+          setStatus(data?.job?.status?? 'PENDING')
           setSummaryLoading(false)
-          clearInterval(intervalId)
+          if (data?.job?.status === 'COMPLETED'){
+              setStatus(data?.job?.status)
+            clearInterval(intervalId)
+            return
+          }
+        
         } else {
           setSummary(null)
           setStatus(data.job?.status || 'pending')
@@ -293,9 +298,17 @@ export default function JobDetailPage() {
                 type="button"
                 onClick={handleSend}
                 disabled={!question.trim() || sending || status=="PENDING" || status=="FAILED" }
-                className="inline-flex items-center justify-center rounded-[1.5rem] bg-gradient-to-r from-purple-600 to-violet-600 px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_50px_-30px_rgba(124,58,237,0.9)] transition duration-200 hover:shadow-[0_22px_80px_-40px_rgba(124,58,237,0.8)] disabled:cursor-not-allowed disabled:bg-slate-700 disabled:shadow-none"
+                className="inline-flex items-center justify-center rounded-[1.5rem] bg-gradient-to-r from-purple-600 to-violet-600 px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_50px_-30px_rgba(124,58,237,0.9)] transition duration-200 hover:shadow-[0_22px_80px_-40px_rgba(124,58,237,0.8)] cursor-pointer disabled:cursor-not-allowed disabled:bg-slate-700 disabled:shadow-none"
               >
-              {status == "PENDING" ? "Embedding" : sending ? 'Sending...' : 'Send question'}
+              {status == "PENDING" ? 
+              <>
+                <svg className="mr-2 h-8 w-8 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                Embedding
+              </>
+              : sending ? 'Sending...' : 'Ask question'}
               </button>
             </div>
             {chatError ? <p className="text-sm text-rose-300">{chatError}</p> : null}

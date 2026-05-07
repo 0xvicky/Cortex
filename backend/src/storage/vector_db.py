@@ -35,11 +35,10 @@ def embed_chunks(job_id, chunks: List[ChunkModel]):
             docs,
             embeddings,
             collection_name=job_id,
-            url=os.getenv("QDRANT_URL"),
-            api_key=os.getenv("QDRANT_API_KEY"),
+            url=os.getenv("QDRANT_URL") or "http://localhost:6333",
+            api_key=os.getenv("QDRANT_API_KEY") or None,
         )
 
         return True
     except Exception as e:
         return False
-    

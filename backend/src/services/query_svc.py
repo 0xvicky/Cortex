@@ -64,8 +64,8 @@ def query_svc(user_query: str, job_id: str):
     vector_store = QdrantVectorStore.from_existing_collection(
         embedding=embeddings,
         collection_name=job_id,
-        url=os.getenv("QDRANT_URL"),
-        api_key=os.getenv("QDRANT_API_KEY"),
+        url=os.getenv("QDRANT_URL") or "http://localhost:6333",
+        api_key=os.getenv("QDRANT_API_KEY") or None,
     )
 
     search_result = vector_store.similarity_search(query=user_query, k=5)
