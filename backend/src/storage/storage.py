@@ -6,8 +6,9 @@ import os
 
 load_dotenv()
 
-redis = Redis.from_url(os.getenv("REDIS_URL"))
-print(redis)
+# redis = Redis.from_url(os.getenv("REDIS_URL"))
+redis_conn = Redis(host="host.docker.internal", port=6379)
+# print(redis)
 
 
 def create_job(job_id, user_id, repo_url):

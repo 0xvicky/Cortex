@@ -64,7 +64,7 @@ def query_svc(user_query: str, job_id: str):
     vector_store = QdrantVectorStore.from_existing_collection(
         embedding=embeddings,
         collection_name=job_id,
-        url=os.getenv("QDRANT_URL") or "http://localhost:6333",
+        url=os.getenv("QDRANT_URL") or "http://host.docker.internal:6333",
         api_key=os.getenv("QDRANT_API_KEY") or None,
     )
 
