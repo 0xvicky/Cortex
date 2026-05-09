@@ -13,7 +13,7 @@ def run_pipeline(job_id: str, repo_url: str, user_id: str):
 
         # store the chunks in vector db for rag retrieval
         res = embed_chunks(job_id, chunks)
-        
+
         update_job(job_id=job_id, user_id=user_id, key="status", value=res)
         # update_status(job_id, "COMPLETED")
 
