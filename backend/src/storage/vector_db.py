@@ -4,7 +4,7 @@ from typing import List
 from src.models.chunks import ChunkModel
 import os
 from dotenv import load_dotenv
-from langchain_huggingface import HuggingFaceEndpointEmbeddings
+from langchain_community.embeddings import FastEmbedEmbeddings
 
 load_dotenv()
 
@@ -28,16 +28,14 @@ def embed_chunks(job_id, chunks: List[ChunkModel]):
             )
         )
 
-    embeddings = HuggingFaceEndpointEmbeddings(
-        model="BAAI/bge-small-en", huggingfacehub_api_token=os.getenv("HF_TOKEN")
-    )
+    embeddings = FastEmbedEmbeddings(model_name="BAAI/bge-small-en")
 
     try:
         vector_store = QdrantVectorStore.from_documents(
             docs,
             embeddings,
             collection_name=job_id,
-            url=os.getenv("QDRANT_URL") or "http://host.docker.internal:6333",
+            url=os.getenv("QDRANT_URL"),
             api_key=os.getenv("QDRANT_API_KEY") or None,
         )
 

@@ -10,7 +10,6 @@ redis = Redis.from_url(os.getenv("REDIS_URL"))
 # redis = Redis(host="host.docker.internal", port=6379)
 # print(redis)
 
-
 def create_job(job_id, user_id, repo_url):
     job = {
         "job_id": job_id,

@@ -1,7 +1,7 @@
 from langchain_qdrant import QdrantVectorStore
-from langchain_huggingface import HuggingFaceEndpointEmbeddings
 from dotenv import load_dotenv
 from src.services.llm import llm_query
+from langchain_community.embeddings import FastEmbedEmbeddings
 import os
 
 load_dotenv()
@@ -59,14 +59,12 @@ def context_to_prompt(context):
 def query_svc(user_query: str, job_id: str):
     print(user_query)
 
-    embeddings = HuggingFaceEndpointEmbeddings(
-        model="BAAI/bge-small-en", huggingfacehub_api_token=os.getenv("HF_TOKEN")
-    )
+    embeddings = FastEmbedEmbeddings(model_name="BAAI/bge-small-en")
 
     vector_store = QdrantVectorStore.from_existing_collection(
         embedding=embeddings,
         collection_name=job_id,
-        url=os.getenv("QDRANT_URL") or "http://host.docker.internal:6333",
+        url=os.getenv("QDRANT_URL"),
         api_key=os.getenv("QDRANT_API_KEY") or None,
     )
 

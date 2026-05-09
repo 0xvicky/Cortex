@@ -9,17 +9,17 @@ load_dotenv()
 
 def qdrant_cleanup():
     # Connect to Qdrant
-    # client = QdrantClient(
-    #     "https://e91d65f3-16d2-4142-8029-a515d041e422.us-west-1-0.aws.cloud.qdrant.io",
-    #     check_compatibility=False,
-    #     api_key=os.getenv("QDRANT_API_KEY"),
-    # )
+    client = QdrantClient(
+        "https://e91d65f3-16d2-4142-8029-a515d041e422.us-west-1-0.aws.cloud.qdrant.io",
+        check_compatibility=False,
+        api_key=os.getenv("QDRANT_API_KEY"),
+    )
     try:
 
-        client = QdrantClient(
-            "http://localhost:6333",
-            check_compatibility=False,
-        )
+        # client = QdrantClient(
+        #     "http://localhost:6333",
+        #     check_compatibility=False,
+        # )
 
         # Get list of all collections
         collections = client.get_collections().collections
@@ -39,8 +39,8 @@ def qdrant_cleanup():
 def redis_cleanup():
 
     r = redis.Redis.from_url(os.getenv("REDIS_URL"))
-    print(r)
     # r = redis.Redis(host="host.docker.internal", port=6379)
+    print(r)
     r.flushdb()
 
 
