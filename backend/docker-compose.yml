@@ -7,11 +7,3 @@ services:
       - .env
     extra_hosts:
       - "host.docker.internal:host-gateway"
-
-  worker:
-    build: .
-    command: python run_worker.py
-    env_file:
-      - .env
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
