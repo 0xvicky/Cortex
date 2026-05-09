@@ -21,7 +21,6 @@ def redis_test():
 
     # Test 3: delete
     r.delete("test_key")
-    print("All good!")
 
 
 def test_tempfile():
