@@ -11,6 +11,7 @@ load_dotenv()
 router = APIRouter(prefix="/auth", tags=["result"])
 
 redis = Redis.from_url(os.getenv("REDIS_URL"))
+# redis = Redis(host="host.docker.internal", port=6379)
 
 
 @router.post("/")

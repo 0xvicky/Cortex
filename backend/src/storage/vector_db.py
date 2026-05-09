@@ -1,10 +1,10 @@
-from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_qdrant import QdrantVectorStore
 from langchain_core.documents import Document
 from typing import List
 from src.models.chunks import ChunkModel
 import os
 from dotenv import load_dotenv
+from langchain_huggingface import HuggingFaceEndpointEmbeddings
 
 load_dotenv()
 
@@ -28,7 +28,9 @@ def embed_chunks(job_id, chunks: List[ChunkModel]):
             )
         )
 
-    embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-small-en")
+    embeddings = HuggingFaceEndpointEmbeddings(
+        model="BAAI/bge-small-en", huggingfacehub_api_token=os.getenv("HF_TOKEN")
+    )
 
     try:
         vector_store = QdrantVectorStore.from_documents(
@@ -39,6 +41,7 @@ def embed_chunks(job_id, chunks: List[ChunkModel]):
             api_key=os.getenv("QDRANT_API_KEY") or None,
         )
 
-        return True
+        return "COMPLETED"
     except Exception as e:
-        return False
+        print(f"Error while embedding :{e}")
+        return "PARTIAL_SUCCESS"

@@ -6,8 +6,8 @@ import os
 
 load_dotenv()
 
-# redis = Redis.from_url(os.getenv("REDIS_URL"))
-redis_conn = Redis(host="host.docker.internal", port=6379)
+redis = Redis.from_url(os.getenv("REDIS_URL"))
+# redis = Redis(host="host.docker.internal", port=6379)
 # print(redis)
 
 
