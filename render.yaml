@@ -2,44 +2,44 @@ services:
   - type: web
     name: cortex-api
     runtime: docker
-    dockerfile: ./Dockerfile
+    dockerfilePath: ./Dockerfile
     rootDir: ./backend
     plan: free
     envVars:
-      - name: QDRANT_API_KEY
+      - key: QDRANT_API_KEY
         sync: false
-      - name: QDRANT_URL
+      - key: QDRANT_URL
         sync: false
-      - name: REDIS_URL
+      - key: REDIS_URL
         sync: false
-      - name: GROQ_API_KEY
+      - key: GROQ_API_KEY
         sync: false
-      - name: GOOGLE_CLIENT_ID
+      - key: GOOGLE_CLIENT_ID
         sync: false
-      - name: JWT_SECRET
+      - key: JWT_SECRET
         sync: false
-      - name: GITHUB_TOKEN
+      - key: GITHUB_TOKEN
         sync: false
 
   - type: worker
     name: cortex-worker
     runtime: docker
-    dockerfile: ./Dockerfile
+    dockerfilePath: ./Dockerfile
     rootDir: ./backend
     plan: free
     dockerCommand: python run_worker.py
     envVars:
-      - name: QDRANT_API_KEY
+      - key: QDRANT_API_KEY
         sync: false
-      - name: QDRANT_URL
+      - key: QDRANT_URL
         sync: false
-      - name: REDIS_URL
+      - key: REDIS_URL
         sync: false
-      - name: GROQ_API_KEY
+      - key: GROQ_API_KEY
         sync: false
-      - name: GOOGLE_CLIENT_ID
+      - key: GOOGLE_CLIENT_ID
         sync: false
-      - name: JWT_SECRET
+      - key: JWT_SECRET
         sync: false
-      - name: GITHUB_TOKEN
+      - key: GITHUB_TOKEN
         sync: false
