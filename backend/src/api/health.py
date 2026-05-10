@@ -16,13 +16,13 @@ async def health_check():
     return {"status": "ok", "service": "cortex-backend"}
 
 
-@router.post("/test")
-def generate_job_id(r: TestRepo):
-    print("this")
-    print(r)
-    payload = json.dumps({"repo_url": r.repo_url, "date": r.date})
-    print(base64.urlsafe_b64encode(payload.encode()).decode())
-    return base64.urlsafe_b64encode(payload.encode()).decode()
+# @router.post("/test")
+# def generate_job_id(r: TestRepo):
+#     print("this")
+#     print(r)
+#     payload = json.dumps({"repo_url": r.repo_url, "date": r.date})
+#     print(base64.urlsafe_b64encode(payload.encode()).decode())
+#     return base64.urlsafe_b64encode(payload.encode()).decode()
 
 
 # async def validate_github_repo(req: RequestRepo):

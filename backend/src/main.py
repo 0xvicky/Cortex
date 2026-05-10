@@ -16,8 +16,7 @@ app.add_middleware(
 
 # Custom middleware
 app.include_router(auth.router)
-
-app.include_router(health.router, dependencies=[Depends(verify_jwt)])
+app.include_router(health.router)
 app.include_router(ingest.router, dependencies=[Depends(verify_jwt)])
 app.include_router(job_result.router, dependencies=[Depends(verify_jwt)])
 app.include_router(user_query.router, dependencies=[Depends(verify_jwt)])
