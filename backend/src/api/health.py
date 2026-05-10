@@ -11,7 +11,7 @@ g = Github(os.getenv("GITHUB_TOKEN"))
 router = APIRouter(prefix="/health", tags=["health"])
 
 
-@router.get("/")
+@router.api_route("/", methods=["GET", "HEAD"])
 async def health_check():
     return {"status": "ok", "service": "cortex-backend"}
 
