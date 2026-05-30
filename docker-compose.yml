@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+
+  qdrant:
+    image: qdrant/qdrant
+    container_name: qdrant-cortex
+    ports:
+      - "7000:6333"
+      - "7001:6334"
+
+  redis:
+    image: redis
+    container_name: redis-cortex
+    ports:
+      - "7700:6379"
